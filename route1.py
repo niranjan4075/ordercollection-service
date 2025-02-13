@@ -220,20 +220,16 @@ async def get_inventory(
     if days is not None:
         today_date = datetime.now()
         target_date = today_date + timedelta(days=days)
-
+        today_date = today_date.strftime("%m/%d/%Y")
+        target_date = target_date.strftime("%m/%d/%Y")
+        print(today_date, target_date, "shjkbk")
+    
         # Apply the EOL and lease end date filtering
         query = db.query(Inventory).filter(
-            or_(
-                and_(
-                    Inventory.device_eoldate >= today_date,
-                    Inventory.device_eoldate <= target_date
-                ),
-                and_(
-                    Inventory.device_eoldate.is_(None),
-                    Inventory.lease_end_date >= today_date,
-                    Inventory.lease_end_date <= target_date
-                )
-            )
+            (cast(Inventory.device_eoldate, Date) >= today_date) & (cast(Inventory.device_eoldate, Date) <= target_date)
+            | ((cast(Inventory.device_eoldate, Date) == None) & (
+                    cast(Inventory.device_leaseend, Date) >= today_date) & (
+                       cast(Inventory.device_leaseend, Date) <= target_date))
         )
     else:
         query = db.query(Inventory)
@@ -254,7 +250,7 @@ async def get_inventory(
 
 
     # Build dynamic filter based on query parameters
-    query = db.query(Inventory)
+   # query = db.query(Inventory)
 
     if item_id:
         query = query.filter(Inventory.item_id == item_id)
