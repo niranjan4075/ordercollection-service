@@ -68,44 +68,14 @@ def get_db():
 @router_filter.get("/export_inventory_to_excel")
 async def export_inventory_to_excel(db: Session = Depends(get_db)):
     # Fetch all records from the Inventory table
-    all_inventory = db.query(Inventory).all()
+    all_inventory = db.query(Inventory)
 
     # If there's no data, return an empty message
     if not all_inventory:
         return {"message": "No data found in the Inventory table."}
 
     # Convert the data to a list of dictionaries for easier DataFrame conversion
-    data_list = []
-    for item in all_inventory:
-        data_list.append({
-            "item_id": item.item_id,
-            "device_name": item.device_name,
-            "device_serialnumber": item.device_serialnumber,
-            "device_type": item.device_type,
-            "device_model": item.device_model,
-            "user_jobtitle": item.user_jobtitle,
-            "user_email": item.user_email,
-            "device_eoldate": item.device_eoldate,
-            "device_leaseend": item.device_leaseend,
-            "user_firstname": item.user_firstname,
-            "user_lastname": item.user_lastname,
-            "user_associateid": item.user_associateid,
-            "user_executive": "Yes" if item.user_executive else "No",  # Convert boolean to 'Yes'/'No'
-            "user_shortdept": item.user_shortdept,
-            "device_shortmfg": item.device_shortmfg,
-            "device_laptoptype": item.device_laptoptype,
-            "user_branch": item.user_branch,
-            "user_branchoffice": item.user_branchoffice,
-            "user_city": item.user_city,
-            "user_state": item.user_state,
-            "device_receiveddate": item.device_receiveddate,
-            "device_age": item.device_age,
-            "device_yearreceived": item.device_yearreceived,
-            "device_yearrefresh": item.device_yearrefresh
-        })
-
-    # Create a pandas DataFrame from the list of dictionaries
-    df = pd.DataFrame(data_list)
+   df=pd.read_sql(query.statement, db.bind)
 
     # Specify the file name for the Excel file
     file_name = "inventory_data.xlsx"
