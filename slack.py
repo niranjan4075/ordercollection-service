@@ -14,7 +14,40 @@ url = "https://slack.com/api/chat.postMessage"
 # Set the message parameters
 payload = {
     "channel": "C0XXXXXX",  # Replace with your channel ID
-    "text": "Hello from your app! :tada:"
+    "text": "Please approve or reject the request:",  # Text fallback
+    "blocks": [
+        {
+            "type": "section",
+            "block_id": "section-1",
+            "text": {
+                "type": "mrkdwn",
+                "text": "*Please approve or reject the request:*"
+            },
+            "accessory": {
+                "type": "actions",
+                "elements": [
+                    {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Approve"
+                        },
+                        "action_id": "approve_button",
+                        "style": "primary"  # Adds a primary button style
+                    },
+                    {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "Reject"
+                        },
+                        "action_id": "reject_button",
+                        "style": "danger"  # Adds a danger button style
+                    }
+                ]
+            }
+        }
+    ]
 }
 
 # Set the headers including the Authorization with the Bearer Token
