@@ -30,12 +30,18 @@ payload = {
                 "text": "<https://example.com|Overlook Hotel> \n :star: \n Doors had too many axe holes, guest in room " +
                     "237 was far too rowdy, whole place felt stuck in the 1920s."
             },
-            "accessory": {
-                "type": "image",
-                "image_url": "https://images.pexels.com/photos/750319/pexels-photo-750319.jpeg",
-                "alt_text": "Haunted hotel image"
-            }
-        },
+            {
+			"type": "actions",
+			"elements": [
+				{
+					"type": "button",
+					"text": {
+						"type": "plain_text",
+						"text": "Farmhouse",
+						"emoji": true
+					},
+					"value": "click_me_123"
+				},
         {
             "type": "section",
             "fields": [
