@@ -18,34 +18,32 @@ payload = {
     "blocks": [
         {
             "type": "section",
-            "block_id": "section-1",
             "text": {
                 "type": "mrkdwn",
-                "text": "*Please approve or reject the request:*"
+                "text": "Danny Torrence left the following review for your property:"
+            }
+        },
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "<https://example.com|Overlook Hotel> \n :star: \n Doors had too many axe holes, guest in room " +
+                    "237 was far too rowdy, whole place felt stuck in the 1920s."
             },
             "accessory": {
-                "type": "actions",
-                "elements": [
-                    {
-                        "type": "button",
-                        "text": {
-                            "type": "plain_text",
-                            "text": "Approve"
-                        },
-                        "action_id": "approve_button",
-                        "style": "primary"  # Adds a primary button style
-                    },
-                    {
-                        "type": "button",
-                        "text": {
-                            "type": "plain_text",
-                            "text": "Reject"
-                        },
-                        "action_id": "reject_button",
-                        "style": "danger"  # Adds a danger button style
-                    }
-                ]
+                "type": "image",
+                "image_url": "https://images.pexels.com/photos/750319/pexels-photo-750319.jpeg",
+                "alt_text": "Haunted hotel image"
             }
+        },
+        {
+            "type": "section",
+            "fields": [
+                {
+                    "type": "mrkdwn",
+                    "text": "*Average Rating*\n1.0"
+                }
+            ]
         }
     ]
 }
