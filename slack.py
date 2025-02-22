@@ -1,33 +1,51 @@
 import os
-import ssl
-from slack_sdk import WebClient
-from slack_sdk.errors import SlackApiError
+import requests
+import json
+import certifi
 
-# Load Slack token from environment variable
+# Load Slack token securely from environment variable
 slack_token = os.getenv("SLACK_BOT_TOKEN")
 if not slack_token:
     raise ValueError("SLACK_BOT_TOKEN environment variable not set.")
 
-# Initialize Slack client with correct SSL handling
-client = WebClient(token=slack_token, ssl=ssl.create_default_context())
+# Slack API URL
+SLACK_API_URL = "https://slack.com/api/chat.postMessage"
 
 def send_message_to_slack(message, channel):
     """
-    Sends a message to a specified Slack channel.
-    
+    Sends a message to a specified Slack channel using requests.
+
     Args:
         message (str): The message content.
         channel (str): The Slack channel ID or name.
     """
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {slack_token}"
+    }
+    
+    payload = {
+        "channel": channel,
+        "text": message
+    }
+
     try:
-        response = client.chat_postMessage(
-            channel=channel,
-            text=message
+        response = requests.post(
+            SLACK_API_URL,
+            headers=headers,
+            data=json.dumps(payload),
+            verify=certifi.where()  # Use certifi for SSL verification
         )
-        print("Message sent successfully:", response["ts"])
-    except SlackApiError as e:
-        print(f"Error sending message: {e.response['error']}")
+        response_data = response.json()
+        
+        if response.status_code == 200 and response_data.get("ok"):
+            print("Message sent successfully:", response_data["ts"])
+        else:
+            print(f"Error sending message: {response_data.get('error')}")
+    
+    except requests.exceptions.RequestException as e:
+        print(f"Request error: {e}")
 
 # Example Usage
 if __name__ == "__main__":
-    send_message_to_slack("Hello, Slack!", "#general")  # Replace #general with your channel ID
+    send_message_to_slack("Hello, Slack! Sent using requests.", "#general")  # Replace #general with your channel ID
