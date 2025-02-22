@@ -16,42 +16,24 @@ payload = {
     "channel": "C0XXXXXX",  # Replace with your channel ID
     "text": "Please approve or reject the request:",  # Text fallback
     "blocks": [
-        {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": "Danny Torrence left the following review for your property:"
-            }
-        },
-        {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": "<https://example.com|Overlook Hotel> \n :star: \n Doors had too many axe holes, guest in room " +
-                    "237 was far too rowdy, whole place felt stuck in the 1920s."
-            },
-            {
-			"type": "actions",
-			"elements": [
-				{
-					"type": "button",
-					"text": {
-						"type": "plain_text",
-						"text": "Farmhouse",
-						"emoji": true
-					},
-					"value": "click_me_123"
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "This is a section block with a button."
+			},
+			"accessory": {
+				"type": "button",
+				"text": {
+					"type": "plain_text",
+					"text": "Click Me",
+					"emoji": true
 				},
-        {
-            "type": "section",
-            "fields": [
-                {
-                    "type": "mrkdwn",
-                    "text": "*Average Rating*\n1.0"
-                }
-            ]
-        }
-    ]
+				"value": "click_me_123",
+				"action_id": "button-action"
+			}
+		}
+	]
 }
 
 # Set the headers including the Authorization with the Bearer Token
