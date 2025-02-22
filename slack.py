@@ -1,51 +1,37 @@
 import os
+import logging
 import requests
-import json
-import certifi
 
-# Load Slack token securely from environment variable
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
+
+# Load the Slack Bot Token
 slack_token = os.getenv("SLACK_BOT_TOKEN")
-if not slack_token:
-    raise ValueError("SLACK_BOT_TOKEN environment variable not set.")
 
-# Slack API URL
-SLACK_API_URL = "https://slack.com/api/chat.postMessage"
+# Set the Slack API endpoint
+url = "https://slack.com/api/chat.postMessage"
 
-def send_message_to_slack(message, channel):
-    """
-    Sends a message to a specified Slack channel using requests.
+# Set the message parameters
+payload = {
+    "channel": "C0XXXXXX",  # Replace with your channel ID
+    "text": "Hello from your app! :tada:"
+}
 
-    Args:
-        message (str): The message content.
-        channel (str): The Slack channel ID or name.
-    """
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {slack_token}"
-    }
-    
-    payload = {
-        "channel": channel,
-        "text": message
-    }
+# Set the headers including the Authorization with the Bearer Token
+headers = {
+    "Authorization": f"Bearer {slack_token}",
+    "Content-Type": "application/json"
+}
 
-    try:
-        response = requests.post(
-            SLACK_API_URL,
-            headers=headers,
-            data=json.dumps(payload),
-            verify=certifi.where()  # Use certifi for SSL verification
-        )
-        response_data = response.json()
-        
-        if response.status_code == 200 and response_data.get("ok"):
-            print("Message sent successfully:", response_data["ts"])
-        else:
-            print(f"Error sending message: {response_data.get('error')}")
-    
-    except requests.exceptions.RequestException as e:
-        print(f"Request error: {e}")
+# Make the POST request to send the message
+response = requests.post(url, headers=headers, json=payload)
 
-# Example Usage
-if __name__ == "__main__":
-    send_message_to_slack("Hello, Slack! Sent using requests.", "#general")  # Replace #general with your channel ID
+# Check if the message was successfully sent
+if response.status_code == 200:
+    data = response.json()
+    if data.get("ok"):
+        logging.info("Message sent successfully")
+    else:
+        logging.error(f"Error sending message: {data.get('error')}")
+else:
+    logging.error(f"Failed to send message. HTTP status code: {response.status_code}")
